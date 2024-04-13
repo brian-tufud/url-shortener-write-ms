@@ -6,17 +6,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.write.api.service.UrlService;
+import com.write.api.service.URLService;
 import com.write.api.utils.UtilsService;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class UrlController {
+public class URLController {
 
-    private final UrlService urlService;
+    private final URLService urlService;
     private final UtilsService utilsService;
 
-    public UrlController(UrlService urlService, UtilsService utilsService) {
+    public URLController(URLService urlService, UtilsService utilsService) {
         super();
         this.urlService = urlService;
         this.utilsService = utilsService;
@@ -25,10 +25,20 @@ public class UrlController {
     @PostMapping("/shorten")
     public ResponseEntity<String> shortenURL(HttpServletRequest request) throws Exception {
 
-        String shortUrl = urlService.shortenURL(request.getParameter("url"));
+        String shortURL = urlService.shortenURL(request.getParameter("url"));
 
         HttpHeaders responseHeaders = utilsService.getResponseHeaders();
-        return ResponseEntity.ok().headers(responseHeaders).body(shortUrl);
+        return ResponseEntity.ok().headers(responseHeaders).body(shortURL);
+    }
+
+    @DeleteMapping("/{short_url}") 
+    public ResponseEntity<Void> deleteShortURL(HttpServletRequest request,
+        @PathVariable(value = "short_url") String shortURL) throws Exception {
+
+        urlService.deleteShortURL(shortURL);
+
+        HttpHeaders responseHeaders = utilsService.getResponseHeaders();
+        return ResponseEntity.ok().headers(responseHeaders).build();
     }
     
 }

@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.write.api.exception.BadRequestException;
-import com.write.api.repository.UrlRepository;
+import com.write.api.repository.URLRepository;
 import com.write.api.utils.Constants;
 
 @Service
-public class UrlService {
+public class URLService {
     
     @Autowired
-    private UrlRepository urlRepository;
+    private URLRepository urlRepository;
 
     public String shortenURL(String longURL) throws BadRequestException {
         if (longURL == null || longURL.isEmpty()) {
@@ -25,11 +25,15 @@ public class UrlService {
 
         String fragment = generateFragment(longURL);
 
-        while (urlRepository.checkIfShortUrlExists(fragment)) {
+        while (urlRepository.checkIfShortURLExists(fragment)) {
             fragment = generateFragment(longURL);
         }
         
         return save(fragment, longURL);
+    }
+
+    public void deleteShortURL(String shortURL) {
+        urlRepository.delete(shortURL);
     }
 
     private String save(String fragment, String longURL) {
@@ -58,14 +62,14 @@ public class UrlService {
 
         String longURLWithSuffix = longURL + randomSuffix;
 
-        BigInteger urlHash = generateUrlHashInt(longURLWithSuffix);
+        BigInteger urlHash = generateURLHashInt(longURLWithSuffix);
         
         String base62Fragment = encodeBase62(urlHash);
 
         return base62Fragment.substring(0, 6);
     }
 
-    private BigInteger generateUrlHashInt(String longURL) {
+    private BigInteger generateURLHashInt(String longURL) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             byte[] digest = md.digest(longURL.getBytes());

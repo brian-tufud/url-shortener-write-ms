@@ -25,9 +25,9 @@ public class DynamoDBService {
         dynamoDbClient.putItem(putItemRequest);
     }
 
-    public Map<String, AttributeValue> getItem(String shortUrl, String shard) {
+    public Map<String, AttributeValue> getItem(String shortURL, String shard) {
         Map<String, AttributeValue> key = new HashMap<>();
-        key.put("short_url", AttributeValue.builder().s(shortUrl).build());
+        key.put("short_url", AttributeValue.builder().s(shortURL).build());
 
         GetItemRequest getItemRequest = GetItemRequest.builder()
                 .tableName(shard)
@@ -36,6 +36,18 @@ public class DynamoDBService {
 
         GetItemResponse getItemResponse = dynamoDbClient.getItem(getItemRequest);
         return getItemResponse.item();
+    }
+
+    public void deleteItem(String shortURL, String shard) {
+        Map<String, AttributeValue> key = new HashMap<>();
+        key.put("short_url", AttributeValue.builder().s(shortURL).build());
+
+        DeleteItemRequest deleteItemRequest = DeleteItemRequest.builder()
+                .tableName(shard)
+                .key(key)
+                .build();
+
+        dynamoDbClient.deleteItem(deleteItemRequest);
     }
 
     public void cleanUp() {
