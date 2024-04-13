@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.write.api.request.ShortenURLRequest;
 import com.write.api.service.URLService;
 import com.write.api.utils.UtilsService;
 
@@ -23,9 +24,9 @@ public class URLController {
     }
 
     @PostMapping("/shorten")
-    public ResponseEntity<String> shortenURL(HttpServletRequest request) throws Exception {
+    public ResponseEntity<String> shortenURL(HttpServletRequest request, @RequestBody ShortenURLRequest body) throws Exception {
 
-        String shortURL = urlService.shortenURL(request.getParameter("url"));
+        String shortURL = urlService.shortenURL(body.getURL());
 
         HttpHeaders responseHeaders = utilsService.getResponseHeaders();
         return ResponseEntity.ok().headers(responseHeaders).body(shortURL);
