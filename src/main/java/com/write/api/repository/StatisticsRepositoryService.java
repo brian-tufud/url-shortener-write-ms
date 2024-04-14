@@ -28,7 +28,7 @@ public class StatisticsRepositoryService {
     public CrudStatusDto create(String shortURL, String longURL) throws Exception {
 
         String baseUrl = env.getProperty(Constants.STATISTICS_BASE_URL);
-        HttpPost request = new HttpPost(baseUrl + "/statistics/long_url");
+        HttpPost request = new HttpPost(baseUrl + "/internal/statistics/long_url");
 
         URLPairRequest body = URLPairRequest.builder().shortURL(shortURL).longURL(longURL).build();
 
@@ -45,7 +45,7 @@ public class StatisticsRepositoryService {
     public CrudStatusDto delete(String shortURL) throws Exception {
 
         String baseUrl = env.getProperty(Constants.STATISTICS_BASE_URL);
-        HttpDelete request = new HttpDelete(baseUrl + "/statistics/short_url/" + shortURL);
+        HttpDelete request = new HttpDelete(baseUrl + "/internal/statistics/short_url/" + shortURL);
 
         return restClientService.executeRequest(request, CrudStatusDto.class);
     }
