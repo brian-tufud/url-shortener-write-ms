@@ -8,10 +8,10 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.write.api.dto.ShortURLDto;
 import com.write.api.exception.BadRequestException;
 import com.write.api.repository.StatisticsRepositoryService;
 import com.write.api.repository.URLRepository;
-import com.write.api.utils.Constants;
 
 @Service
 public class URLService {
@@ -22,7 +22,7 @@ public class URLService {
     @Autowired
     private StatisticsRepositoryService statisticsRepositoryService;
 
-    public String shortenURL(String longURL) throws BadRequestException {
+    public ShortURLDto shortenURL(String longURL) throws BadRequestException {
         if (longURL == null || longURL.isEmpty()) {
             throw new BadRequestException("URL cannot be empty nor null");
         }
@@ -37,7 +37,7 @@ public class URLService {
 
         saveStatistics(fragment, longURL);
 
-        return Constants.SHORT_URL_PREFIX + fragment;
+        return ShortURLDto.builder().shortURL(fragment).build();
     }
 
     public void deleteShortURL(String shortURL) throws Exception {
