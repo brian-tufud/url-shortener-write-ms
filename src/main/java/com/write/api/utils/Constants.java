@@ -1,9 +1,8 @@
 package com.write.api.utils;
 
 public class Constants {
+    
     public static final String STATISTICS_BASE_URL = "statistics_base_url";
-
-    public static final String SHORT_URL_PREFIX = "https://879e-2800-a4-2296-a500-2471-f02e-eb81-458b.ngrok-free.app/api/url/";
 
     private static final String DB_TABLE_PREFIX = "short_url_shard_";
     
