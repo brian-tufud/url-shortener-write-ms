@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShortenURLRequest {
 
-    @JsonProperty("url")
-    private String URL;
+    @JsonProperty("long_url")
+    private String longURL;
 
 }
