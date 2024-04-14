@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.write.api.exception.BadRequestException;
+import com.write.api.repository.StatisticsRepositoryService;
 import com.write.api.repository.URLRepository;
 import com.write.api.utils.Constants;
 
@@ -17,6 +18,9 @@ public class URLService {
     
     @Autowired
     private URLRepository urlRepository;
+
+    @Autowired
+    private StatisticsRepositoryService statisticsRepositoryService;
 
     public String shortenURL(String longURL) throws BadRequestException {
         if (longURL == null || longURL.isEmpty()) {
@@ -29,20 +33,32 @@ public class URLService {
             fragment = generateFragment(longURL);
         }
         
-        return save(fragment, longURL);
+        save(fragment, longURL);
+
+        saveStatistics(fragment, longURL);
+
+        return Constants.SHORT_URL_PREFIX + fragment;
     }
 
-    public void deleteShortURL(String shortURL) {
+    public void deleteShortURL(String shortURL) throws Exception {
+        statisticsRepositoryService.delete(shortURL);
+        
         urlRepository.delete(shortURL);
     }
 
-    private String save(String fragment, String longURL) {
+    private void saveStatistics(String shortURL, String longURL) {
         try {
-            urlRepository.insert(fragment, longURL);
-            return Constants.SHORT_URL_PREFIX + fragment;
+            statisticsRepositoryService.create(shortURL, longURL);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+        }
+    }
+
+    private void save(String fragment, String longURL) {
+        try {
+            urlRepository.insert(fragment, longURL);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
